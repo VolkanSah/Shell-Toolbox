@@ -3,3 +3,5 @@
     Kopiere das Skript nach /usr/local/bin/:
 
     sudo cp dev_toolbox.sh /usr/local/bin/dev_toolbox
+
+    sudo chmod +x /usr/local/bin/dev_toolbox
