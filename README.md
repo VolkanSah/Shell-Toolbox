@@ -5,3 +5,6 @@
     sudo cp dev_toolbox.sh /usr/local/bin/dev_toolbox
 
     sudo chmod +x /usr/local/bin/dev_toolbox
+
+
+    im terminal überall dann dev_toolbox eingeben und nutzen
