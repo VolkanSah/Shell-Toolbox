@@ -84,7 +84,7 @@ This script provides a menu-driven interface for managing Docker containers, ima
     ```
 3. Run the script:
     ```bash
-    docker_toolbox
+    sudo docker_toolbox
     ```
 
 ## Disclaimer
