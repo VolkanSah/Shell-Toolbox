@@ -1,23 +1,23 @@
+# Shell Toolbox for Developers and Network Admins
 
-# Shell Toolbox (Developer and Network Admin Toolbox)
 ### Debian/Ubuntu
 
 ## Introduction
 
-This repository contains two simple and useful shell scripts designed for developers and network administrators. These scripts provide a menu-driven interface for executing common tasks, automating repetitive commands, and gathering essential system and network information. Although created as a fun project, these scripts can be handy tools for daily use.
+This repository contains useful shell scripts designed for developers, network administrators, and Docker users. These scripts provide a menu-driven interface for executing common tasks, automating repetitive commands, and gathering essential system and network information.
 
 ## Scripts Overview
 
 ### 1. Developer Toolbox (`dev_toolbox.sh`)
 
-The Developer Toolbox script offers a range of options to update and clean the system, display system information, and manage memory and cache. Here are the available options:
+This script offers options to update and clean the system, display system information, and manage memory and cache.
 
-- **System Update**: Runs `apt-get update` to update the package list.
-- **System Upgrade**: Runs `apt-get upgrade` to upgrade all installed packages.
-- **Autoclean**: Runs `apt-get autoclean` to remove outdated packages.
+- **System Update**: Runs `apt-get update`.
+- **System Upgrade**: Runs `apt-get upgrade`.
+- **Autoclean**: Runs `apt-get autoclean`.
 - **Clear RAM**: Clears the RAM cache.
 - **Clear Cache**: Clears the system cache.
-- **Show System Information**: Displays information about the system (kernel, CPU, memory, disk usage).
+- **Show System Information**: Displays system information.
 
 #### How to Use
 1. Copy the script to `/usr/local/bin/`:
@@ -28,26 +28,23 @@ The Developer Toolbox script offers a range of options to update and clean the s
     ```bash
     sudo chmod +x /usr/local/bin/dev_toolbox
     ```
-3. Run the script from any location in the terminal:
+3. Run the script:
     ```bash
     dev_toolbox
     ```
 
 ### 2. Network Admin Toolbox (`network_info_tool.sh`)
 
-The Network Admin Toolbox script provides a menu with various network-related commands to help gather information and diagnose network issues. Here are the available options:
+This script provides various network-related commands to help gather information and diagnose network issues.
 
-- **Show Network Interfaces (ifconfig)**: Displays network interfaces using `ifconfig`.
-- **Show Network Interfaces (ip a)**: Displays network interfaces using `ip a`.
-- **Show Network Status (netstat)**: Displays network connections, routing tables, interface statistics, masquerade connections, and multicast memberships.
-- **Show Network Status (ss)**: Displays socket statistics.
-- **DNS Lookup (nslookup)**: Performs a DNS lookup for a specified domain or IP address.
-- **DNS Query (dig)**: Performs a DNS query for a specified domain or IP address.
-- **Ping**: Sends ICMP ECHO_REQUEST to network hosts.
-- **Traceroute**: Traces the route packets take to a network host.
+- **Show Network Interfaces**: `ifconfig` and `ip a`
+- **Show Network Status**: `netstat` and `ss`
+- **DNS Information**: `nslookup` and `dig`
+- **Ping**: Sends ICMP ECHO_REQUEST.
+- **Traceroute**: Traces the route to a network host.
 - **Show ARP Table**: Displays the ARP table.
-- **Show Routing Table**: Displays the kernel routing table.
-- **Show Firewall Rules**: Displays the current iptables rules.
+- **Show Routing Table**: Displays the routing table.
+- **Show Firewall Rules**: Displays iptables rules.
 - **Show Active Connections**: Displays active network connections.
 
 #### How to Use
@@ -59,14 +56,40 @@ The Network Admin Toolbox script provides a menu with various network-related co
     ```bash
     sudo chmod +x /usr/local/bin/network_info_tool
     ```
-3. Run the script from any location in the terminal:
+3. Run the script:
     ```bash
     network_info_tool
     ```
 
+### 3. Docker Toolbox (`docker_toolbox.sh`)
+
+This script provides a menu-driven interface for managing Docker containers, images, networks, and volumes.
+
+- **Docker System Information**: `docker info` and `docker version`
+- **Manage Containers**: `docker ps`, `docker start`, `docker stop`, `docker restart`, `docker rm`
+- **Manage Images**: `docker images`, `docker rmi`, `docker pull`, `docker build`
+- **Container Logs**: `docker logs`
+- **Execute Commands in Containers**: `docker exec`
+- **Network Information**: `docker network ls` and `docker network inspect`
+- **Volume Information**: `docker volume ls` and `docker volume inspect`
+
+#### How to Use
+1. Copy the script to `/usr/local/bin/`:
+    ```bash
+    sudo cp docker_toolbox.sh /usr/local/bin/docker_toolbox
+    ```
+2. Make the script executable:
+    ```bash
+    sudo chmod +x /usr/local/bin/docker_toolbox
+    ```
+3. Run the script:
+    ```bash
+    docker_toolbox
+    ```
+
 ## Disclaimer
 
-These scripts were created as a fun project to automate common tasks and gather useful information. While they can be useful in daily operations, they are provided "as-is" without any warranty. Use them at your own risk and feel free to customize them according to your needs.
+These scripts were created for fun and to automate common tasks. They are provided "as-is" without any warranty. Use them at your own risk and feel free to customize them as needed.
 
 ## Contributions
 
@@ -82,4 +105,4 @@ If you have any questions or feedback, please contact [Your Name] at [Your Email
 
 ---
 
-Thank you for using the Developer and Network Admin Toolbox!
+Thank you for using the Shell Toolbox!
