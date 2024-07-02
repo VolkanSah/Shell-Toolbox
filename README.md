@@ -82,10 +82,11 @@ This script provides a menu-driven interface for managing Docker containers, ima
     ```bash
     sudo chmod +x /usr/local/bin/docker_toolbox
     ```
-3. Run the script:
+3. Run the script (Docker needs root access):
     ```bash
     sudo docker_toolbox
     ```
+
 
 ## Disclaimer
 
