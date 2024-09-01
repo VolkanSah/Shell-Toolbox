@@ -1,85 +1,121 @@
 #!/bin/bash
 
+# Colors for better readability
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
 # Function to display the menu
 show_menu() {
-    echo "============================="
+    echo -e "${YELLOW}============================="
     echo " Network Information Menu"
-    echo "============================="
-    echo "1. Show Network Interfaces (ifconfig)"
-    echo "2. Show Network Interfaces (ip a)"
-    echo "3. Show Network Status (netstat)"
-    echo "4. Show Network Status (ss)"
-    echo "5. Show DNS Information (nslookup)"
-    echo "6. Show DNS Information (dig)"
-    echo "7. Ping an IP Address or Domain"
-    echo "8. Traceroute to an IP Address or Domain"
-    echo "9. Show ARP Table (arp -a)"
-    echo "10. Show Routing Table (route -n)"
-    echo "11. Show Firewall Rules (iptables -L)"
-    echo "12. Show Active Connections (lsof -i)"
-    echo "13. Exit"
-    echo "============================="
+    echo "=============================${NC}"
+    echo "1. Show Network Interfaces"
+    echo "2. Show Network Status"
+    echo "3. DNS Information"
+    echo "4. Ping an IP Address or Domain"
+    echo "5. Traceroute to an IP Address or Domain"
+    echo "6. Show ARP Table"
+    echo "7. Show Routing Table"
+    echo "8. Show Firewall Rules"
+    echo "9. Show Active Connections"
+    echo "10. Network Speed Test"
+    echo "11. Exit"
+    echo -e "${YELLOW}=============================${NC}"
+}
+
+# Function to execute commands and handle errors
+execute_command() {
+    echo -e "${GREEN}Executing: $1${NC}"
+    eval $1
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}Command failed. Please check your permissions or try again.${NC}"
+    fi
 }
 
 # Functions for each option
-network_interfaces_ifconfig() {
-    echo "Network Interfaces (ifconfig):"
-    ifconfig
+network_interfaces() {
+    echo -e "${YELLOW}Network Interfaces:${NC}"
+    echo "1. Using ifconfig"
+    echo "2. Using ip a"
+    read -p "Choose an option: " interface_choice
+    case $interface_choice in
+        1) execute_command "ifconfig" ;;
+        2) execute_command "ip a" ;;
+        *) echo -e "${RED}Invalid choice${NC}" ;;
+    esac
 }
 
-network_interfaces_ip() {
-    echo "Network Interfaces (ip a):"
-    ip a
+network_status() {
+    echo -e "${YELLOW}Network Status:${NC}"
+    echo "1. Using netstat"
+    echo "2. Using ss"
+    read -p "Choose an option: " status_choice
+    case $status_choice in
+        1) execute_command "netstat -tuln" ;;
+        2) execute_command "ss -tuln" ;;
+        *) echo -e "${RED}Invalid choice${NC}" ;;
+    esac
 }
 
-network_status_netstat() {
-    echo "Network Status (netstat):"
-    netstat
-}
-
-network_status_ss() {
-    echo "Network Status (ss):"
-    ss
-}
-
-dns_info_nslookup() {
-    read -p "Enter a domain or IP address for nslookup: " address
-    nslookup $address
-}
-
-dns_info_dig() {
-    read -p "Enter a domain or IP address for dig: " address
-    dig $address
+dns_info() {
+    echo -e "${YELLOW}DNS Information:${NC}"
+    echo "1. Using nslookup"
+    echo "2. Using dig"
+    read -p "Choose an option: " dns_choice
+    read -p "Enter a domain or IP address: " address
+    case $dns_choice in
+        1) execute_command "nslookup $address" ;;
+        2) execute_command "dig $address" ;;
+        *) echo -e "${RED}Invalid choice${NC}" ;;
+    esac
 }
 
 ping_address() {
     read -p "Enter an IP address or domain to ping: " address
-    ping -c 4 $address
+    execute_command "ping -c 4 $address"
 }
 
 traceroute_address() {
     read -p "Enter an IP address or domain for traceroute: " address
-    traceroute $address
+    execute_command "traceroute $address"
 }
 
 arp_table() {
-    echo "ARP Table (arp -a):"
-    arp -a
+    echo -e "${YELLOW}ARP Table:${NC}"
+    execute_command "arp -a"
 }
 
 routing_table() {
-    echo "Routing Table (route -n):"
-    route -n
+    echo -e "${YELLOW}Routing Table:${NC}"
+    execute_command "route -n"
 }
 
 firewall_rules() {
-    echo "Firewall Rules (iptables -L):"
-    sudo iptables -L
+    echo -e "${YELLOW}Firewall Rules:${NC}"
+    execute_command "sudo iptables -L"
 }
 
 active_connections() {
-    echo "Active Connections (lsof -i):"
-    sudo lsof -i
+    echo -e "${YELLOW}Active Connections:${NC}"
+    execute_command "sudo lsof -i"
+}
+
+network_speed_test() {
+    echo -e "${YELLOW}Network Speed Test:${NC}"
+    if command -v speedtest-cli &> /dev/null; then
+        execute_command "speedtest-cli"
+    else
+        echo -e "${RED}speedtest-cli is not installed. Would you like to install it? (y/n)${NC}"
+        read install_choice
+        if [ "$install_choice" = "y" ]; then
+            execute_command "sudo apt-get update && sudo apt-get install speedtest-cli -y"
+            execute_command "speedtest-cli"
+        else
+            echo "Skipping speed test."
+        fi
+    fi
 }
 
 # Main program
@@ -87,50 +123,24 @@ while true; do
     show_menu
     read -p "Choose an option: " choice
     case $choice in
-        1)
-            network_interfaces_ifconfig
-            ;;
-        2)
-            network_interfaces_ip
-            ;;
-        3)
-            network_status_netstat
-            ;;
-        4)
-            network_status_ss
-            ;;
-        5)
-            dns_info_nslookup
-            ;;
-        6)
-            dns_info_dig
-            ;;
-        7)
-            ping_address
-            ;;
-        8)
-            traceroute_address
-            ;;
-        9)
-            arp_table
-            ;;
-        10)
-            routing_table
-            ;;
+        1) network_interfaces ;;
+        2) network_status ;;
+        3) dns_info ;;
+        4) ping_address ;;
+        5) traceroute_address ;;
+        6) arp_table ;;
+        7) routing_table ;;
+        8) firewall_rules ;;
+        9) active_connections ;;
+        10) network_speed_test ;;
         11)
-            firewall_rules
-            ;;
-        12)
-            active_connections
-            ;;
-        13)
             echo "Exiting program."
-            break
+            exit 0
             ;;
         *)
-            echo "Invalid choice, please try again."
+            echo -e "${RED}Invalid choice, please try again.${NC}"
             ;;
     esac
-    echo "Press any key to return to the menu..."
-    read -n 1
+    echo "Press Enter to return to the menu..."
+    read
 done
