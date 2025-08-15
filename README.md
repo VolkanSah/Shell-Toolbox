@@ -1,7 +1,7 @@
 # Developer Server Toolbox 
 ##### v2.1 
 
-#### A lightweight, interactive Bash tool for managing and monitoring Linux servers.
+A lightweight, interactive Bash tool for developers to manage and monitor Linux servers. Can also be used as a boilerplate.
 
 This interactive Bash script is your go-to tool for quick DevOps tasks, local development environments, or small server setups. It's designed to simplify service management and system monitoring right from your terminal.
 
