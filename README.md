@@ -3,10 +3,9 @@
 
 A lightweight, interactive Bash tool for developers to manage and monitor Linux servers. Can also be used as a boilerplate.
 
-----
+If you have 20 to 50 services, you’ll quickly see how easy life gets with this tool — no more manual restarts or rebooting whole infrastructures.
 
-This interactive Bash script is your go-to tool for quick DevOps tasks, local development environments, or small server setups. It's designed to simplify service management and system monitoring right from your terminal.
-
+This interactive Bash script is your go-to helper for quick DevOps tasks, local development environments, or small server setups. It’s built to simplify service management and system monitoring right from your terminal.
 ##  Key Features
 
   - **Service Management**: Easily view, start, stop, restart, or reload your most critical services with a simple command.
