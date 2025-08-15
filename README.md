@@ -3,7 +3,6 @@
 A lightweight, interactive Bash tool for managing and monitoring services, system resources, and logs on Linux servers.  
 Ideal for quick DevOps tasks, local development environments, or small server setups.
 
----
 
 ## Features
 
@@ -38,7 +37,6 @@ Ideal for quick DevOps tasks, local development environments, or small server se
 
 You can add or remove services at any time from the **Configure Services** menu.
 
----
 
 ## Requirements
 
@@ -50,49 +48,28 @@ You can add or remove services at any time from the **Configure Services** menu.
   - `ip` (from `iproute2`)
   - `journalctl` (from `systemd`)
 
----
-
 ## Installation
 
-1. **Download the script**  
-   ```bash
+1. **Download the script**
+
+```bash
    wget https://example.com/server-toolbox.sh
    chmod +x server-toolbox.sh
-````
+  ```
 
 2. **Run it**
 
-   ```bash
+```bash
    ./server-toolbox.sh
-   ```
-
----
-
-## Menu Overview
-
-| Option | Description                 |
-| ------ | --------------------------- |
-| 1      | Service Status Overview     |
-| 2      | Start Service               |
-| 3      | Stop Service                |
-| 4      | Restart Service             |
-| 5      | Reload Service              |
-| 6      | Restart All Active Services |
-| 7      | Show System Resources       |
-| 8      | Clear RAM/Cache             |
-| 9      | Network Information         |
-| 10     | Process Monitor             |
-| 11     | View Service Logs (Live)    |
-| 12     | Configure Services          |
-| 13     | Exit                        |
+```
 
 ---
 
 ## Example Screenshots
-
+```
 **Main Menu**
 
-```
+
 ========================================
           Dev Server Toolbox v2.1
 ========================================
@@ -123,4 +100,4 @@ Feel free to modify, distribute, or integrate into your own tools.
 ---
 
 
-```
+
