@@ -101,6 +101,10 @@ Gracefully exits the script.
 
 -----
 
+### Screnshot
+
+![Dev Toolbox](server-toolbox.jpg)
+
 ##  Requirements & Dependencies
 
   - A Linux system with `systemd` is required.
