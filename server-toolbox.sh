@@ -1,5 +1,23 @@
 #!/bin/bash
+# Developer's Server Toolbox
+# A lightweight, interactive Bash tool for managing and monitoring Linux servers.
 # Version 2.1
+# https://github.com/VolkanSah/Dev-Server-Toolbox/
+# Copyright (C) 2008 - 2025 Volkan Kücükbudak
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+#
 # Color Definitions
 RED='\033[0;31m'
 GREEN='\033[0;32m'
