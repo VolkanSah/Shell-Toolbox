@@ -12,7 +12,7 @@ SERVICES=(
     "apache2"
     "mariadb"
     "tor"
-    "ssh"
+    "sshd"
 )
 
 # Funktion zur Anzeige des Hauptmenüs
@@ -285,7 +285,7 @@ configure_services() {
                 fi
                 ;;
             3)
-                SERVICES=("apache2" "mariadb" "tor" "ssh")
+                SERVICES=("apache2" "mariadb" "tor" "sshd")
                 echo -e "${GREEN}Services auf Standard zurückgesetzt${NC}"
                 sleep 1
                 ;;
