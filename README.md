@@ -6,17 +6,17 @@
 
 ## Table of Contents
 
-* [Introduction](#introduction)
-* [Script Overview](#script-overview)
+- [Introduction](#introduction)
+- [Script Overview](#script-overview)
 
-  * [Features](#features)
-  * [Service Configuration](#service-configuration)
-  * [How to Use](#how-to-use)
-* [Example `.dev-toolbox-services`](#example-dev-toolbox-services)
-* [Disclaimer](#disclaimer)
-* [Contributions](#contributions)
-* [License](#license)
-* [Contact](#contact)
+  - [Features](#features)
+  - [Service Configuration](#service-configuration)
+  - [How to Use](#how-to-use)
+- [Example `.dev-toolbox-services`](#example-dev-toolbox-services)
+- [Disclaimer](#disclaimer)
+- [Contributions](#contributions)
+- [License](#license)
+- [Contact](#contact)
 
 ---
 
