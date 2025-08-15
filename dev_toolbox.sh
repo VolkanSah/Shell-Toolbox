@@ -12,17 +12,10 @@ CONFIG_FILE="$HOME/.dev-toolbox-services"
 
 # Default fallback services if no config exists
 DEFAULT_SERVICES=(
-    "nginx"
     "apache2"
-    "mysql"
     "mariadb"
-    "postgresql"
-    "redis-server"
-    "php7.4-fmp"
-    "php8.0-fpm"
-    "php8.1-fpm"
+    "tor"
     "sshd"
-    "docker"
 )
 
 load_services() {
