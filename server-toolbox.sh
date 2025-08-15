@@ -25,7 +25,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Global list of services (can be modified in the menu)
+# Global list of services (can be modified in the menu for temp)
 SERVICES=(
     "apache2"
     "mariadb"
