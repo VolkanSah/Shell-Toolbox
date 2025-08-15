@@ -71,7 +71,7 @@ You can edit the services directly in the menu (**Option 12**: Configure Service
 3. Run the toolbox:
 
    ```bash
-   dev_toolbox
+   ./dev_toolbox
    ```
 
 ---
