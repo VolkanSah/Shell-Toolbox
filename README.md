@@ -1,6 +1,6 @@
-# Dev Server Toolbox
+# server-toolbox.shell
 
-### v3.0 — bricked. use version 1 please!
+### v2.1 — (2025) English 
 
 ##### Debian/Ubuntu
 
