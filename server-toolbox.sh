@@ -7,19 +7,19 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Globale Service-Liste (ohne Konfigurationsdatei)
+# Globale Service-Liste
 SERVICES=(
     "apache2"
     "mariadb"
     "tor"
-    "sshd"
+    "ssh"
 )
 
 # Funktion zur Anzeige des Hauptmenüs
 show_menu() {
     clear
     echo -e "${BLUE}========================================"
-    echo "       Dev Server Toolbox v2.0"
+    echo "       Dev Server Toolbox v2.1"
     echo -e "========================================${NC}"
     echo "1.  Service-Status Übersicht"
     echo "2.  Service starten"
@@ -53,47 +53,63 @@ execute_with_feedback() {
 # Funktion zum Anzeigen verfügbarer Services
 list_services() {
     echo -e "${YELLOW}Verfügbare Services:${NC}"
-    local counter=1
-    for service in "${SERVICES[@]}"; do
+    for i in "${!SERVICES[@]}"; do
+        service="${SERVICES[$i]}"
         if systemctl list-unit-files | grep -q "^$service"; then
             status=$(systemctl is-active "$service" 2>/dev/null)
             enabled=$(systemctl is-enabled "$service" 2>/dev/null)
             
-            case "$status:$enabled" in
-                "active:enabled")    color="${GREEN}" ;;
-                "active:"*)           color="${GREEN}" ;;
-                *":enabled")         color="${RED}" ;;
-                *)                   color="${RED}" ;;
-            esac
+            # Statusanzeige mit Farben
+            if [ "$status" = "active" ]; then
+                status_color="${GREEN}"
+            else
+                status_color="${RED}"
+            fi
             
-            echo -e "$counter. ${color}${service}${NC} (Status: $status, Aktiviert: $enabled)"
+            # Aktivierungsstatus
+            if [ "$enabled" = "enabled" ]; then
+                enabled_text=", aktiviert"
+            else
+                enabled_text=", deaktiviert"
+            fi
+            
+            echo -e "$(($i+1)). ${status_color}${service}${NC} (${status}${enabled_text})"
         else
-            echo -e "$counter. ${RED}${service} (nicht gefunden!)${NC}"
+            echo -e "$(($i+1)). ${RED}${service} (nicht gefunden!)${NC}"
         fi
-        ((counter++))
     done
 }
 
-# Funktion zur Auswahl eines Services
+# Funktion zur Auswahl eines Services mit sichtbarer Liste
 select_service() {
-    list_services
-    echo
-    read -p "Service-Nummer auswählen: " choice
-    
-    if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#SERVICES[@]} ]; then
-        selected_service="${SERVICES[$((choice-1))]}"
-        echo "$selected_service"
-        return 0
-    else
-        echo -e "${RED}Ungültige Auswahl${NC}"
-        return 1
-    fi
+    while true; do
+        clear
+        echo -e "${BLUE}========== Service-Auswahl ==========${NC}"
+        list_services
+        echo
+        read -p "Service-Nummer auswählen (0 zum Abbrechen): " choice
+        
+        # Abbruch
+        if [ "$choice" == "0" ]; then
+            return 1
+        fi
+        
+        # Eingabe validieren
+        if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#SERVICES[@]} ]; then
+            selected_service="${SERVICES[$((choice-1))]}"
+            echo "$selected_service"
+            return 0
+        else
+            echo -e "${RED}Ungültige Auswahl! Bitte Nummer zwischen 1-${#SERVICES[@]} eingeben.${NC}"
+            sleep 2
+        fi
+    done
 }
 
 # Service-Status Übersicht
 service_status() {
-    echo -e "${BLUE}Service-Status:${NC}"
-    echo "========================================"
+    clear
+    echo -e "${BLUE}========== Service-Status ==========${NC}"
     local active_count=0
     
     for service in "${SERVICES[@]}"; do
@@ -117,10 +133,13 @@ service_status() {
 # Service-Operationen ausführen
 service_action() {
     local action=$1
-    local service
+    local action_name=$2
     
     service=$(select_service)
-    [ -z "$service" ] && return
+    if [ -z "$service" ]; then
+        echo -e "${YELLOW}Abgebrochen.${NC}"
+        return
+    fi
     
     case "$action" in
         start)
@@ -128,7 +147,9 @@ service_action() {
             if ! systemctl is-enabled "$service" &>/dev/null; then
                 echo -e "${YELLOW}Service ist nicht aktiviert.${NC}"
                 read -p "Autostart aktivieren? (j/n): " choice
-                [[ "$choice" =~ ^[jJ]$ ]] && execute_with_feedback "sudo systemctl enable $service"
+                if [[ "$choice" =~ ^[jJ]$ ]]; then
+                    execute_with_feedback "sudo systemctl enable $service"
+                fi
             fi
             ;;
         *)
@@ -139,7 +160,8 @@ service_action() {
 
 # Alle aktiven Services neustarten
 restart_all() {
-    echo -e "${YELLOW}Starte alle aktiven Services neu...${NC}"
+    clear
+    echo -e "${YELLOW}========== Starte alle aktiven Services neu ==========${NC}"
     local count=0
     
     for service in "${SERVICES[@]}"; do
@@ -151,13 +173,13 @@ restart_all() {
         fi
     done
     
-    echo -e "${GREEN}$count Services wurden neu gestartet${NC}"
+    echo -e "${GREEN}\n$count Services wurden neu gestartet${NC}"
 }
 
 # Systemressourcen anzeigen
 system_resources() {
-    echo -e "${BLUE}Systemressourcen:${NC}"
-    echo "========================================"
+    clear
+    echo -e "${BLUE}========== Systemressourcen ==========${NC}"
     
     echo -e "${YELLOW}Arbeitsspeicher:${NC}"
     free -h
@@ -174,7 +196,8 @@ system_resources() {
 
 # RAM und Cache leeren
 clear_ram() {
-    echo -e "${YELLOW}Leere Systemcache...${NC}"
+    clear
+    echo -e "${YELLOW}========== Leere Systemcache ==========${NC}"
     execute_with_feedback "sudo sync"
     execute_with_feedback "sudo sysctl vm.drop_caches=3"
     echo -e "${GREEN}✓ RAM und Cache wurden geleert${NC}"
@@ -182,8 +205,8 @@ clear_ram() {
 
 # Netzwerkinformationen
 network_info() {
-    echo -e "${BLUE}Netzwerkinformationen:${NC}"
-    echo "========================================"
+    clear
+    echo -e "${BLUE}========== Netzwerkinformationen ==========${NC}"
     
     echo -e "${YELLOW}Aktive Verbindungen:${NC}"
     ss -tuln
@@ -194,8 +217,8 @@ network_info() {
 
 # Prozessmonitor
 process_monitor() {
-    echo -e "${BLUE}Prozessmonitor:${NC}"
-    echo "========================================"
+    clear
+    echo -e "${BLUE}========== Prozessmonitor ==========${NC}"
     
     echo -e "${YELLOW}CPU-intensive Prozesse:${NC}"
     ps aux --sort=-%cpu | head -n 11
@@ -206,11 +229,15 @@ process_monitor() {
 
 # Live-Logs anzeigen
 show_logs() {
-    local service
     service=$(select_service)
-    [ -z "$service" ] && return
+    if [ -z "$service" ]; then
+        echo -e "${YELLOW}Abgebrochen.${NC}"
+        return
+    fi
     
-    echo -e "${YELLOW}Live-Logs für $service (STRG+C zum Beenden):${NC}"
+    clear
+    echo -e "${YELLOW}========== Live-Logs für $service ==========${NC}"
+    echo -e "${BLUE}(STRG+C zum Beenden)${NC}"
     echo "========================================"
     sudo journalctl -u "$service" -f
 }
@@ -219,12 +246,11 @@ show_logs() {
 configure_services() {
     while true; do
         clear
-        echo -e "${BLUE}Service-Konfiguration${NC}"
-        echo "========================================"
+        echo -e "${BLUE}========== Service-Konfiguration ==========${NC}"
         echo "Aktuelle Services:"
         
         for i in "${!SERVICES[@]}"; do
-            echo "$((i+1)). ${SERVICES[i]}"
+            echo "$(($i+1)). ${SERVICES[$i]}"
         done
         
         echo -e "\nOptionen:"
@@ -242,32 +268,35 @@ configure_services() {
                 if [ -n "$new_service" ]; then
                     SERVICES+=("$new_service")
                     echo -e "${GREEN}$new_service wurde hinzugefügt${NC}"
+                    sleep 1
                 fi
                 ;;
             2)
                 read -p "Zu entfernende Service-Nummer: " num
                 if [[ "$num" =~ ^[0-9]+$ ]] && [ "$num" -ge 1 ] && [ "$num" -le ${#SERVICES[@]} ]; then
                     removed="${SERVICES[$((num-1))]}"
-                    unset SERVICES[$((num-1))]
+                    unset "SERVICES[$((num-1))]"
                     SERVICES=("${SERVICES[@]}")
                     echo -e "${GREEN}$removed wurde entfernt${NC}"
+                    sleep 1
                 else
-                    echo -e "${RED}Ungültige Eingabe${NC}"
+                    echo -e "${RED}Ungültige Eingabe!${NC}"
+                    sleep 1
                 fi
                 ;;
             3)
-                SERVICES=("apache2" "mariadb" "tor" "sshd")
+                SERVICES=("apache2" "mariadb" "tor" "ssh")
                 echo -e "${GREEN}Services auf Standard zurückgesetzt${NC}"
+                sleep 1
                 ;;
             4)
                 return
                 ;;
             *)
-                echo -e "${RED}Ungültige Option${NC}"
+                echo -e "${RED}Ungültige Option!${NC}"
+                sleep 1
                 ;;
         esac
-        
-        read -p "Enter drücken um fortzufahren..."
     done
 }
 
@@ -278,10 +307,10 @@ while true; do
     
     case $choice in
         1) service_status ;;
-        2) service_action start ;;
-        3) service_action stop ;;
-        4) service_action restart ;;
-        5) service_action reload ;;
+        2) service_action start "Starten" ;;
+        3) service_action stop "Stoppen" ;;
+        4) service_action restart "Neustarten" ;;
+        5) service_action reload "Neu laden" ;;
         6) restart_all ;;
         7) system_resources ;;
         8) clear_ram ;;
@@ -290,16 +319,19 @@ while true; do
         11) show_logs ;;
         12) configure_services ;;
         13)
+            clear
             echo -e "${GREEN}Beende...${NC}"
             exit 0
             ;;
         *)
-            echo -e "${RED}Ungültige Auswahl${NC}"
+            echo -e "${RED}Ungültige Auswahl!${NC}"
+            sleep 1
             ;;
     esac
     
+    # Bei den meisten Optionen auf Eingabe warten
     if [[ ! "$choice" =~ ^(11|12)$ ]]; then
-        echo -e "\n${BLUE}Enter drücken um fortzufahren...${NC}"
-        read
+        echo
+        read -p "Enter drücken um fortzufahren..."
     fi
 done
