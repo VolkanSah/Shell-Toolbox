@@ -68,8 +68,11 @@ service_status_overview() {
 list_available_services() {
     echo -e "${YELLOW}Available services:${NC}"
     local counter=1
+    AVAILABLE_SERVICES=()
+    
     for service in "${SERVICES[@]}"; do
         if systemctl list-unit-files | grep -q "^$service"; then
+            AVAILABLE_SERVICES+=("$service")
             status=$(systemctl is-active "$service" 2>/dev/null)
             if [ "$status" = "active" ]; then
                 echo -e "$counter. ${service} ${GREEN}(running)${NC}"
@@ -81,25 +84,66 @@ list_available_services() {
     done
 }
 
+get_service_by_number() {
+    local choice=$1
+    local max_services=${#AVAILABLE_SERVICES[@]}
+    
+    if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "$max_services" ]; then
+        echo "${AVAILABLE_SERVICES[$((choice-1))]}"
+        return 0
+    else
+        echo ""
+        return 1
+    fi
+}
+
 start_service() {
     list_available_services
     echo
-    read -p "Enter service name: " service
+    read -p "Enter service number: " choice
+    
+    service=$(get_service_by_number "$choice")
+    if [ -z "$service" ]; then
+        echo -e "${RED}Invalid selection${NC}"
+        return 1
+    fi
+    
     execute_with_feedback "sudo systemctl start $service"
-    execute_with_feedback "sudo systemctl enable $service"
+    
+    if ! systemctl is-enabled --quiet "$service" 2>/dev/null; then
+        echo -e "${YELLOW}Service is not enabled for auto-start.${NC}"
+        read -p "Enable for auto-start on boot? (y/n): " enable_choice
+        if [ "$enable_choice" = "y" ] || [ "$enable_choice" = "Y" ]; then
+            execute_with_feedback "sudo systemctl enable $service"
+        fi
+    fi
 }
 
 stop_service() {
     list_available_services
     echo
-    read -p "Enter service name: " service
+    read -p "Enter service number: " choice
+    
+    service=$(get_service_by_number "$choice")
+    if [ -z "$service" ]; then
+        echo -e "${RED}Invalid selection${NC}"
+        return 1
+    fi
+    
     execute_with_feedback "sudo systemctl stop $service"
 }
 
 restart_service() {
     list_available_services
     echo
-    read -p "Enter service name: " service
+    read -p "Enter service number: " choice
+    
+    service=$(get_service_by_number "$choice")
+    if [ -z "$service" ]; then
+        echo -e "${RED}Invalid selection${NC}"
+        return 1
+    fi
+    
     execute_with_feedback "sudo systemctl restart $service"
 }
 
@@ -159,7 +203,14 @@ process_monitor() {
 service_logs() {
     list_available_services
     echo
-    read -p "Enter service name for logs: " service
+    read -p "Enter service number: " choice
+    
+    service=$(get_service_by_number "$choice")
+    if [ -z "$service" ]; then
+        echo -e "${RED}Invalid selection${NC}"
+        return 1
+    fi
+    
     read -p "Number of lines (default 50): " lines
     lines=${lines:-50}
     
