@@ -1,76 +1,66 @@
-# server-toolbox.shell
+# Dev Server Toolbox v2.1
 
-### v2.1 — (2025) English 
-
-##### Debian/Ubuntu
-
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Script Overview](#script-overview)
-
-  - [Features](#features)
-  - [Service Configuration](#service-configuration)
-  - [How to Use](#how-to-use)
-- [Example `.dev-toolbox-services`](#example-dev-toolbox-services)
-- [Disclaimer](#disclaimer)
-- [Contributions](#contributions)
-- [License](#license)
-- [Contact](#contact)
+A lightweight, interactive Bash tool for managing and monitoring services, system resources, and logs on Linux servers.  
+Ideal for quick DevOps tasks, local development environments, or small server setups.
 
 ---
 
-## Introduction
+## Features
 
-The **Dev Server Toolbox** is a powerful, menu-driven Bash script for developers and server administrators to manage and monitor system services, resources, and network information.
-It allows you to configure your own list of services and provides quick access to start, stop, restart, and inspect them.
+- **Service Management**
+  - View status of monitored services (active/inactive/not installed)
+  - Start, stop, restart, or reload services
+  - Restart all currently active services in one go
+  - Enable services on boot if desired
+  - Live service log viewer (`journalctl -f`)
 
-The toolbox is fully customizable — simply define the services you want to monitor in a `.dev-toolbox-services` file, or use the built-in defaults.
+- **Customizable Service List**
+  - Add or remove services from the monitored list
+  - Reset service list to default
 
----
+- **System Monitoring**
+  - Memory, disk, CPU, and load average overview
+  - List top CPU and memory consuming processes
+  - View active network connections and interfaces
 
-## Script Overview
-
-### Features
-
-* **Service Status Overview** — Check if configured services are active, inactive, enabled, or missing.
-* **Start/Stop/Restart/Reload Service** — Control services directly from the menu.
-* **Restart All Active Services** — Quickly restart all services currently running.
-* **System Resources** — View memory, disk, CPU usage, and top processes.
-* **Clear RAM/Cache** — Free up memory by clearing cache safely.
-* **Network Information** — View active connections and network interfaces.
-* **Process Monitor** — List top CPU and memory-consuming processes.
-* **Live Service Logs** — Tail journal logs of a chosen service.
-* **Configure Services** — Add, remove, or reset services in the `.dev-toolbox-services` config file.
-
----
-
-### Service Configuration
-
-The toolbox loads services from:
-
-1. **Config file**: `~/.dev-toolbox-services` (customizable per server)
-2. **Default list**: Used only if no config file exists
-
-You can edit the services directly in the menu (**Option 12**: Configure Services).
+- **Maintenance Tools**
+  - Clear RAM and cache (`sync` + `drop_caches`)
+  - Quick process monitoring
 
 ---
 
-### How to Use
+## Default Monitored Services
 
-1. Example
+- `apache2` (Web server)
+- `mariadb` (Database server)
+- `tor` (Tor service)
+- `ssh` (SSH server)
 
+You can add or remove services at any time from the **Configure Services** menu.
+
+---
+
+## Requirements
+
+- Linux system with `systemd`
+- `sudo` privileges for service management
+- Recommended packages:
+  - `systemctl` (usually part of `systemd`)
+  - `ss` (from `iproute2`)
+  - `ip` (from `iproute2`)
+  - `journalctl` (from `systemd`)
+
+---
+
+## Installation
+
+1. **Download the script**  
    ```bash
-   mkdir /home/scripts
- 
-   sudo cp server-toolbox.sh /home/scripts
-   ```
-2. Make it executable:
+   wget https://example.com/server-toolbox.sh
+   chmod +x server-toolbox.sh
+````
 
-   ```bash
-   sudo chmod +x server-toolbox.sh
-   ```
-3. Run the toolbox:
+2. **Run it**
 
    ```bash
    ./server-toolbox.sh
@@ -78,44 +68,59 @@ You can edit the services directly in the menu (**Option 12**: Configure Service
 
 ---
 
-## Example `.dev-toolbox-services`
+## Menu Overview
 
-You can list any services that are managed by `systemctl`.
-Example configuration file:
-
-```
-apache2
-mariadb
-tor
-ssh
-php8.1-fpm
-```
-
-Each entry should be the exact service name as recognized by `systemctl list-units --type=service`.
-
----
-
-## Disclaimer
-
-This script is provided “as is” without warranty.
-Use it at your own risk — you are responsible for any changes made to your system.
+| Option | Description                 |
+| ------ | --------------------------- |
+| 1      | Service Status Overview     |
+| 2      | Start Service               |
+| 3      | Stop Service                |
+| 4      | Restart Service             |
+| 5      | Reload Service              |
+| 6      | Restart All Active Services |
+| 7      | Show System Resources       |
+| 8      | Clear RAM/Cache             |
+| 9      | Network Information         |
+| 10     | Process Monitor             |
+| 11     | View Service Logs (Live)    |
+| 12     | Configure Services          |
+| 13     | Exit                        |
 
 ---
 
-## Contributions
+## Example Screenshots
 
-Feel free to open issues or submit pull requests with improvements, new features, or bug fixes.
+**Main Menu**
+
+```
+========================================
+          Dev Server Toolbox v2.1
+========================================
+1.  Service Status Overview
+2.  Start Service
+3.  Stop Service
+4.  Restart Service
+5.  Reload Service
+6.  Restart All Active Services
+7.  Show System Resources
+8.  Clear RAM/Cache
+9.  Network Information
+10. Process Monitor
+11. View Service Logs (Live)
+12. Configure Services
+13. Exit
+========================================
+Currently monitoring 4 services
+```
 
 ---
 
 ## License
 
-This project is licensed under the MIT License.
+GPL 3 License
+Feel free to modify, distribute, or integrate into your own tools.
 
 ---
 
-## Contact
 
-More projects and contact information: [https://volkansah.github.io](https://volkansah.github.io)
-
-If you appreciate my work, you can support me here: [GitHub Sponsors](https://github.com/sponsors/volkansah)
+```
