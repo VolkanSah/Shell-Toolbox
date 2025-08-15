@@ -58,20 +58,22 @@ You can edit the services directly in the menu (**Option 12**: Configure Service
 
 ### How to Use
 
-1. Copy the script to `/usr/local/bin/`:
+1. Example
 
    ```bash
-   sudo cp dev_toolbox.sh /usr/local/bin/dev_toolbox
+   mkdir /home/scripts
+ 
+   sudo cp server-toolbox.sh /home/scripts
    ```
 2. Make it executable:
 
    ```bash
-   sudo chmod +x /usr/local/bin/dev_toolbox
+   sudo chmod +x server-toolbox.sh
    ```
 3. Run the toolbox:
 
    ```bash
-   ./dev_toolbox
+   ./server-toolbox.sh
    ```
 
 ---
