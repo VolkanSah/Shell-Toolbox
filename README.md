@@ -1,6 +1,6 @@
 # Dev Server Toolbox
 
-### v3.0 — Stable Release
+### v3.0 — bricked. use version 1 please!
 
 ##### Debian/Ubuntu
 
