@@ -1,119 +1,118 @@
-# Dev Server Toolbox
+# Developer Server Toolbox v2.1 
 
-### v3.0 — bricked. use version 1 please!
+#### A lightweight, interactive Bash tool for managing and monitoring Linux servers.
 
-##### Debian/Ubuntu
+This interactive Bash script is your go-to tool for quick DevOps tasks, local development environments, or small server setups. It's designed to simplify service management and system monitoring right from your terminal.
 
-## Table of Contents
+##  Key Features
 
-- [Introduction](#introduction)
-- [Script Overview](#script-overview)
+  - **Service Management**: Easily view, start, stop, restart, or reload your most critical services with a simple command.
+  - **System Monitoring**: Get a real-time snapshot of your server's resources, including memory, disk, and CPU usage.
+  - **Live Logs**: Troubleshoot on the fly by viewing a service's logs in real time.
+  - **Maintenance Tools**: Perform quick maintenance tasks like clearing system cache to free up memory.
+  - **Customizable Service List**: Adapt the list of monitored services to your specific needs, all within the script's menu.
 
-  - [Features](#features)
-  - [Service Configuration](#service-configuration)
-  - [How to Use](#how-to-use)
-- [Example `.dev-toolbox-services`](#example-dev-toolbox-services)
-- [Disclaimer](#disclaimer)
-- [Contributions](#contributions)
-- [License](#license)
-- [Contact](#contact)
+-----
 
----
+##  Installation & Usage
 
-## Introduction
+1.  **Download the script**
+    Save the code to a file named `server-toolbox.sh`.
 
-The **Dev Server Toolbox** is a powerful, menu-driven Bash script for developers and server administrators to manage and monitor system services, resources, and network information.
-It allows you to configure your own list of services and provides quick access to start, stop, restart, and inspect them.
+    ```bash
+    # Make the script executable
+    chmod +x server-toolbox.sh
+    ```
 
-The toolbox is fully customizable — simply define the services you want to monitor in a `.dev-toolbox-services` file, or use the built-in defaults.
+2.  **Run the script**
 
----
+    ```bash
+    ./server-toolbox.sh
+    ```
 
-## Script Overview
+    The main menu will appear in your terminal, and you can select an option by entering its number.
 
-### Features
+-----
 
-* **Service Status Overview** — Check if configured services are active, inactive, enabled, or missing.
-* **Start/Stop/Restart/Reload Service** — Control services directly from the menu.
-* **Restart All Active Services** — Quickly restart all services currently running.
-* **System Resources** — View memory, disk, CPU usage, and top processes.
-* **Clear RAM/Cache** — Free up memory by clearing cache safely.
-* **Network Information** — View active connections and network interfaces.
-* **Process Monitor** — List top CPU and memory-consuming processes.
-* **Live Service Logs** — Tail journal logs of a chosen service.
-* **Configure Services** — Add, remove, or reset services in the `.dev-toolbox-services` config file.
+##  Detailed Menu Options
 
----
+###  Service Status Overview
 
-### Service Configuration
+This option provides a clear, color-coded overview of all configured services:
 
-The toolbox loads services from:
+  - **`●` (green):** The service is **active** and running.
+  - **`○` (red):** The service is **inactive**.
+  - **`✗` (red):** The service is **not installed** on your system.
 
-1. **Config file**: `~/.dev-toolbox-services` (customizable per server)
-2. **Default list**: Used only if no config file exists
+### 2-5. Service Actions (Start, Stop, Restart, Reload)
 
-You can edit the services directly in the menu (**Option 12**: Configure Services).
+Selecting one of these options presents a list of all services from your configuration. Simply enter the number of the service you want to manage.
 
----
+> **Note on `Start`:** If you start a service that is not enabled to run on boot, the script will prompt you to enable it. This is a handy shortcut that saves you from running a separate `systemctl enable` command.
 
-### How to Use
+###  Restart All Active Services
 
-1. Copy the script to `/usr/local/bin/`:
+This is a powerful function for bulk actions. It iterates through your entire service list and restarts only those that are currently active. This is especially useful after system updates or configuration changes that require multiple services to be reloaded.
 
-   ```bash
-   sudo cp dev_toolbox.sh /usr/local/bin/dev_toolbox
-   ```
-2. Make it executable:
+###  Show System Resources
 
-   ```bash
-   sudo chmod +x /usr/local/bin/dev_toolbox
-   ```
-3. Run the toolbox:
+Get a quick look at your server's health:
 
-   ```bash
-   ./dev_toolbox
-   ```
+  - **Memory Usage:** Shows RAM and swap usage with `free -h`.
+  - **Disk Usage:** Displays disk space usage for all mounted file systems with `df -h`.
+  - **CPU & Load Average:** Provides system uptime and average load with `uptime`.
+  - **Top Processes:** Lists the most CPU and memory-intensive processes.
 
----
+### Clear RAM/Cache
 
-## Example `.dev-toolbox-services`
+This option helps you instantly free up memory by clearing the system cache. It runs the commands `sudo sync` and `sudo sysctl vm.drop_caches=3` to flush the cache.
 
-You can list any services that are managed by `systemctl`.
-Example configuration file:
+###  Network Information
 
-```
-apache2
-mariadb
-tor
-ssh
-php8.1-fpm
-```
+Displays essential network details:
 
-Each entry should be the exact service name as recognized by `systemctl list-units --type=service`.
+  - **Active Connections:** Lists all active listening ports and connections with `ss -tuln`.
+  - **Network Interfaces:** Shows your network interfaces and their IP addresses with `ip -br addr show`.
 
----
+### 10\. Process Monitor
 
-## Disclaimer
+This provides a more focused view of process activity. It shows two lists:
 
-This script is provided “as is” without warranty.
-Use it at your own risk — you are responsible for any changes made to your system.
+  - The top processes sorted by **CPU usage**.
+  - The top processes sorted by **memory usage**.
 
----
+###  View Service Logs (Live)
 
-## Contributions
+An indispensable tool for debugging. This option lets you choose a service and watch its logs in real time using `sudo journalctl -u [service] -f`. To exit the live log view, simply press **`CTRL+C`**.
 
-Feel free to open issues or submit pull requests with improvements, new features, or bug fixes.
+###  Configure Services
 
----
+This menu allows you to dynamically manage the list of services monitored by the script:
 
-## License
+  - **Add Service:** Add a new service name to the list.
+  - **Remove Service:** Remove a service by its number.
+  - **Reset to Default:** Restore the list to the original configuration (`apache2`, `mariadb`, `tor`, `ssh`).
 
-This project is licensed under the MIT License.
+> **Important:** Changes made via this menu are **temporary** and will be lost when you exit the script. For a permanent change, you must directly edit the `SERVICES` array variable at the top of the `server-toolbox.sh` script file.
 
----
+###  Exit
 
-## Contact
+Gracefully exits the script.
 
-More projects and contact information: [https://volkansah.github.io](https://volkansah.github.io)
+-----
 
-If you appreciate my work, you can support me here: [GitHub Sponsors](https://github.com/sponsors/volkansah)
+### Screnshot
+
+![Dev Toolbox](server-toolbox.jpg)
+
+##  Requirements & Dependencies
+
+  - A Linux system with `systemd` is required.
+  - **`sudo` privileges** are needed for most service management actions.
+  - The script relies on the following standard Linux commands, which are typically pre-installed: `systemctl`, `ss`, `ip`, `df`, `free`, `uptime`, `top`, `ps`, and `journalctl`.
+
+-----
+
+##  License
+
+This project is licensed under the GPL 3 License. You are free to modify, distribute, or integrate it into your own tools.
