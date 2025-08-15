@@ -1,3 +1,5 @@
+# Shell server-toolbox
+# by Volkan sah
 #!/bin/bash
 
 # Farbdefinitionen
